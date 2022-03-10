@@ -1,9 +1,11 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-public class Folder {
+public class Folder implements Comparable<Folder>{
 
 	private ArrayList<Note> notes;
 	private String name;
@@ -48,6 +50,67 @@ public class Folder {
 			return false;
 		Folder other = (Folder) obj;
 		return Objects.equals(name, other.name);
+	}
+
+	@Override
+	public int compareTo(Folder o) {
+		int result = name.compareTo(o.getName());
+
+		if (result == 0)
+			return 0;
+		else if (result > 0)
+			return 1;
+		else
+			return -1;
+	}
+
+	public void sortNotes() {
+		Collections.sort(notes);
+	}
+
+	public List<Note> searchNotes(String keywords) {
+		List<Note> result = new ArrayList<Note>();
+
+		String[] keysplit = keywords.split(" "); int i = 0;
+		String[] key = new String[5];
+		for (String k : keysplit){
+			if (!k.equalsIgnoreCase("or")){
+				key[i++] = k;
+			}
+		}
+
+		for (Note n : notes){
+			boolean added = false;
+			if(n instanceof TextNote){
+				String c1 = ((TextNote) n).getContent(); // Content Handling
+
+				if ( (c1.toLowerCase().contains(key[0].toLowerCase()) ||
+				 	  c1.toLowerCase().contains(key[1].toLowerCase())) &&
+					 (c1.toLowerCase().contains(key[2].toLowerCase()) ||
+					  c1.toLowerCase().contains(key[3].toLowerCase())) ){
+					result.add(n); added = true;
+				}
+				if (!added){
+					// Title Handling
+					if ( (n.getTitle().toLowerCase().contains(key[0].toLowerCase()) ||
+							  n.getTitle().toLowerCase().contains(key[1].toLowerCase())) &&
+							 (n.getTitle().toLowerCase().contains(key[2].toLowerCase()) ||
+							  n.getTitle().toLowerCase().contains(key[3].toLowerCase())) ){
+								result.add(n);
+							}
+				}
+			}
+			else{ // ImageNote
+				if ( (n.getTitle().toLowerCase().contains(key[0].toLowerCase()) ||
+					  n.getTitle().toLowerCase().contains(key[1].toLowerCase())) &&
+					 (n.getTitle().toLowerCase().contains(key[2].toLowerCase()) ||
+					  n.getTitle().toLowerCase().contains(key[3].toLowerCase())) ){
+						result.add(n);
+					}
+			}
+		}
+
+		return result;
 	}
 
 }

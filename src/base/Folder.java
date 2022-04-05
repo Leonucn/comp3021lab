@@ -73,8 +73,8 @@ public class Folder implements Comparable<Folder>, Serializable{
 	public List<Note> searchNotes(String keywords) {
 		List<Note> result = new ArrayList<Note>();
 
-		String[] keysplit = keywords.split(" "); int i = 0;
-		String[] key = new String[5];
+		String[] keysplit = keywords.toLowerCase().split(" "); int i = 0;
+		String[] key = new String[100];
 		for (String k : keysplit){
 			if (!k.equalsIgnoreCase("or")){
 				key[i++] = k;
@@ -84,29 +84,23 @@ public class Folder implements Comparable<Folder>, Serializable{
 		for (Note n : notes){
 			boolean added = false;
 			if(n instanceof TextNote){
-				String c1 = ((TextNote) n).getContent(); // Content Handling
+				String c1 = ((TextNote) n).getContent().toLowerCase(); // Content Handling
 
-				if ( (c1.toLowerCase().contains(key[0].toLowerCase()) ||
-				 	  c1.toLowerCase().contains(key[1].toLowerCase())) &&
-					 (c1.toLowerCase().contains(key[2].toLowerCase()) ||
-					  c1.toLowerCase().contains(key[3].toLowerCase())) ){
+				if (c1.contains(keywords.toLowerCase())){
 					result.add(n); added = true;
 				}
 				if (!added){
 					// Title Handling
-					if ( (n.getTitle().toLowerCase().contains(key[0].toLowerCase()) ||
-							  n.getTitle().toLowerCase().contains(key[1].toLowerCase())) &&
-							 (n.getTitle().toLowerCase().contains(key[2].toLowerCase()) ||
-							  n.getTitle().toLowerCase().contains(key[3].toLowerCase())) ){
+					if ( n.getTitle().toLowerCase().contains(keywords.toLowerCase()) ){
 								result.add(n);
 							}
 				}
 			}
 			else{ // ImageNote
-				if ( (n.getTitle().toLowerCase().contains(key[0].toLowerCase()) ||
-					  n.getTitle().toLowerCase().contains(key[1].toLowerCase())) &&
-					 (n.getTitle().toLowerCase().contains(key[2].toLowerCase()) ||
-					  n.getTitle().toLowerCase().contains(key[3].toLowerCase())) ){
+				if ( (n.getTitle().toLowerCase().contains(key[0]) ||
+					  n.getTitle().toLowerCase().contains(key[1])) &&
+					 (n.getTitle().toLowerCase().contains(key[2]) ||
+					  n.getTitle().toLowerCase().contains(key[3])) ){
 						result.add(n);
 					}
 			}

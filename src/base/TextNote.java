@@ -55,4 +55,15 @@ public class TextNote extends Note{
 		}
 	}
 
+	public boolean isnull() {
+		if (content == null)
+			return true;
+		else
+			return false;
+	}
+
+	public void setcontent(String new_content){
+		content = new_content;
+	}
+
 }

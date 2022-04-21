@@ -21,6 +21,14 @@ public class Folder implements Comparable<Folder>, Serializable{
 		notes.add(note);
 	}
 
+	public boolean removeNotes(String title){
+		for (Note n : notes){
+			if (n.getTitle().equals(title))
+				return notes.remove(n);
+		}
+		return false;
+	}
+
 	public String getName(){
 		return name;
 	}
@@ -84,23 +92,27 @@ public class Folder implements Comparable<Folder>, Serializable{
 		for (Note n : notes){
 			boolean added = false;
 			if(n instanceof TextNote){
-				String c1 = ((TextNote) n).getContent().toLowerCase(); // Content Handling
 
-				if (c1.contains(keywords.toLowerCase())){
-					result.add(n); added = true;
+				if (((TextNote) n).isnull() || ((TextNote) n).getContent().equals("")){ // Empty content
+					if ( n.getTitle().toLowerCase().contains(keywords.toLowerCase()) )
+						result.add(n);
 				}
-				if (!added){
-					// Title Handling
-					if ( n.getTitle().toLowerCase().contains(keywords.toLowerCase()) ){
-								result.add(n);
-							}
+				else{
+					// Content Handling
+					String c1 = ((TextNote) n).getContent().toLowerCase();
+					if (c1.contains(keywords.toLowerCase())){
+						result.add(n); added = true;
+					}
+
+					if (!added){ // Title Handling
+						if ( n.getTitle().toLowerCase().contains(keywords.toLowerCase()) )
+							result.add(n);
+					}
 				}
+
 			}
 			else{ // ImageNote
-				if ( (n.getTitle().toLowerCase().contains(key[0]) ||
-					  n.getTitle().toLowerCase().contains(key[1])) &&
-					 (n.getTitle().toLowerCase().contains(key[2]) ||
-					  n.getTitle().toLowerCase().contains(key[3])) ){
+				if ( n.getTitle().toLowerCase().contains(keywords.toLowerCase()) ){
 						result.add(n);
 					}
 			}
